@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quelques experts</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" href="lib/jquery/jquery.mobile-1.2.0.min.css"/>
+    <script src="lib/jquery/jquery-1.8.3.min.js"></script>
+    <script src="lib/jquery/jquery.mobile-1.2.0.min.js"></script>
+
+    <style>
+        a.relation {
+            padding-left: 15px;
+            background-repeat: no-repeat;
+        }
+
+        div.ui-document-value div.ui-block-a {
+            padding-right: 10px;
+            text-align: right;
+        }
+        img.mime {
+            width:16px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            console.log("init");
+            $("#documentList").on("click", "a", function (event) {
+                var docid = $(this).attr('data-docid');
+                console.log($(this).text() + docid);
+                /*$.get('?app=MOBILEVIEWER&action=DOCVIEW&id=' + docid,function(data){
+                 $('#documentView').append(data).trigger('create');
+                 },'html');
+                 */
+              viewDocument(docid);
+
+            });
+             $("body").on("click", "a.relation", function (event) {
+                var docid = $(this).attr('data-docid');
+                console.log($(this).text() + docid);
+
+              viewDocument(docid);
+
+            });
+        });
+
+        function viewDocument(docid) {
+            var divId='documentViewPage-'+docid;
+                          if (document.getElementById(divId)) {
+                              $.mobile.changePage('#'+divId);
+                          } else {
+                          $.ajax({
+                              url:'?app=MOBILEVIEWER&action=DOCVIEW&id=' + docid,
+                              success:function (data) {
+                                  //console.log('Load was performed.', data);
+
+                                  //$("#documentView").append(data).trigger("create");
+                                  // $("#documentView").html(data).trigger("create");
+                                  //$("#documentViewPage div").remove();
+                                 // $("#documentViewPage").html('').append(data).trigger("create");
+                                 // $('#documentViewPage').attr("id","");
+                                  $("body").append(data).trigger("create");
+                                  $.mobile.changePage('#'+divId);
+                                  //$("#documentView").html("coucuo");
+                              },
+                              error:function (data) {
+                                  console.log('ERROR.', data);
+                                  var r = data.responseText;
+
+                                  $("#dialogError").popup("open").html(r);
+                              }
+                          });
+                          }
+        }
+    </script>
+</head>
+
+<body>
+<div id="mainPage" data-role="page" data-theme="a">
+
+    <div data-role="header">
+        <h1>Quelques experts</h1>
+    </div>
+
+
+    <div data-role="content">
+        <ul id="documentList" data-role="listview" data-filter="true" data-inset="true">
+            [BLOCK DOCLIST]
+            <li>
+                <a data-docid="[docid]"><img class="ui-li-icon" src="[docicon]"/>[doctitle]</a>
+            </li>
+            [ENDBLOCK DOCLIST]
+        </ul>
+
+    </div>
+    <!-- /content -->
+
+    <div data-role="footer">
+        <h4>Page Footer</h4>
+    </div>
+    <!-- /footer -->
+    <div data-role="popup" id="dialogError">
+        <p>This is a completely basic popup, no options set.
+
+        <p>
+    </div>
+
+
+</div>
+<div id="documentViewPage" data-role="page" data-theme="a">
+    <!-- documentView -->
+   </div>
+</body>
+</html>

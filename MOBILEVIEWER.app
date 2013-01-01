@@ -18,30 +18,31 @@ $app_desc = array(
     "childof" => "" // instance of other application
 );
 
-/*
 //Example for construct application acl 
 $app_acl = array(
     array(
-        "name" => "MOBILEVIEWER_ACLONE",
-        "description" => N_("Access to ticket sales")
+        "name" => "MOBILEVIEWER_ACCESS",
+        "description" => N_("Access to mobile apps")
     )
 );
 
 // Example for describe action
 $action_desc = array(
     array(
-        "name" => "MOBILEVIEWER_TICKETSALES",
-        "short_name" => N_("sum of sales"),
-        "acl" => "MOBILEVIEWER_ACLONE"
-    ),
-    array(
-        "name" => "MOBILEVIEWER_TEXTTICKETSALES",
-        "short_name" => N_("text sum of sales"),
-        "script" => "zoo_ticketsales.php",
-        "function" => "zoo_ticketsales",
-        "acl" => "MOBILEVIEWER_ACLONE"
-    )
+        "name" => "MOBILEVIEWER_MAIN",
+        "short_name" => N_("main interface"),
+        "acl" => "MOBILEVIEWER_ACCESS",
+        "layout"=>"mobileviewer_main.html",
+
+        "root"=>"Y"
+    ),array(
+            "name" => "DOCVIEW",
+            "short_name" => N_("doc view"),
+            "acl" => "MOBILEVIEWER_ACCESS",
+            "layout"=>"docview.xml"
+
+        )
 )
-*/
+
 
 ?>

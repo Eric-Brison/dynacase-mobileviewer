@@ -1,0 +1,31 @@
+
+<div id="documentViewPage-[docid]" data-role="page" data-theme="a">
+
+    <div data-role="header">
+       <img style="float:left" src="[docIcon]"/> <h1>[docTitle]</h1>
+    </div>
+
+
+    <div data-role="content">
+        [BLOCK FRAMES]
+        <div class="ui-document-value" data-role="collapsible" data-collapsed="false">
+   <h3>[frameLabel]</h3>
+
+        [BLOCK [FID]]
+            <div class="ui-grid-a">
+            	<div class="ui-block-a">[label]:</div>
+            	<div class="ui-block-b">[value]</div>
+            </div>
+        [ENDBLOCK [FID]]
+        </div>
+        [ENDBLOCK FRAMES]
+
+
+    </div>
+    <!-- /content -->
+
+    <div data-role="footer">
+        <h4>Fin du document</h4>
+    </div>
+    <!-- /footer -->
+</div>
