@@ -21,16 +21,27 @@ function docview(Action & $action)
     $action->lay->set("docIcon", $d->getIcon('', 40));
     
     $values = $d->getvalues();
+    $fdoc=$d->getFamDoc();
+    $action->lay->set("familyTitle",$fdoc->getHTMLTitle());
     $out = array();
     $frames = array();
     foreach ($values as $aid => $value) {
         if ($value !== '') {
             $oa = $d->getAttribute(($aid));
             if ($oa) {
-                
-                if ($oa->type == "docid" || $oa->type == "account") {
+                //if ($oa->mvisibility=='H' || $oa->mvisibility=='I') continue;
+                if (($oa->type == "docid" || $oa->type == "account") ) {
+                    if ($oa->isMultiple()) {
+                        $tv=$d->getTValue($aid);
+                        $displayValue='';
+                        foreach ($tv as $v) {
+                            simpleQuery($action->dbaccess, sprintf('select icon from docread where id=%d', $v) , $iconValue, true, true);
+                                                $displayValue .= sprintf('<a class="relation" data-role="button" data-inline="true" data-docid="%d"> <img src="%s"/> %s</a>', $v, $d->getIcon($iconValue, 16) , $d->getHTMLTitle($v));
+                        }
+                    } else {
                     simpleQuery($action->dbaccess, sprintf('select icon from docread where id=%d', $value) , $iconValue, true, true);
                     $displayValue = sprintf('<a class="relation" data-role="button" data-inline="true" data-docid="%d"> <img src="%s"/> %s</a>', $value, $d->getIcon($iconValue, 16) , $d->getHTMLTitle($value));
+                    }
                 } else {
                     $displayValue = $d->getHtmlValue($oa, $value);
                 }

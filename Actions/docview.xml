@@ -2,7 +2,11 @@
 <div id="documentViewPage-[docid]" data-role="page" data-theme="a">
 
     <div data-role="header">
-       <img style="float:left" src="[docIcon]"/> <h1>[docTitle]</h1>
+        <img style="float:left" src="[docIcon]"/>
+        <span style="float:left" class="ui-familyTitle">[familyTitle] </span>
+        <h1> [docTitle]</h1>
+		<a href="#" style="display:none" data-icon="home" data-iconpos="notext" ></a>
+		<a href="#mainPage"  data-icon="home" data-iconpos="notext"  data-transition="fade">Page principale</a>
     </div>
 
 
