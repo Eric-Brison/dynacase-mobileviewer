@@ -32,16 +32,21 @@ $action_desc = array(
         "name" => "MOBILEVIEWER_MAIN",
         "short_name" => N_("main interface"),
         "acl" => "MOBILEVIEWER_ACCESS",
-        "layout"=>"mobileviewer_main.html",
+        "layout" => "mobileviewer_main.html",
 
-        "root"=>"Y"
-    ),array(
-            "name" => "DOCVIEW",
-            "short_name" => N_("doc view"),
-            "acl" => "MOBILEVIEWER_ACCESS",
-            "layout"=>"docview.xml"
+        "root" => "Y"
+    ), array(
+        "name" => "DOCVIEW",
+        "short_name" => N_("doc view"),
+        "acl" => "MOBILEVIEWER_ACCESS",
+        "layout" => "docview.xml"
 
-        )
+    ), array(
+        "name" => "DOCLIST",
+        "short_name" => N_("doc list"),
+        "acl" => "MOBILEVIEWER_ACCESS"
+
+    )
 )
 
 

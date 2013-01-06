@@ -6,12 +6,15 @@
  */
 
 
-function mobileviewer_main(Action & $action)
+function doclist(Action & $action)
 {
-    /*
-    $s = new SearchDoc($action->dbaccess, 1925);
+    
+    $s = new SearchDoc($action->dbaccess);
     $s->setSlice(20);
     $s->setObjectReturn(true);
+    $s->addFilter("doctype !~ 'S'");
+    $s->addGeneralFilter($action->getArgument("keyword"));
+    $s->setPertinenceOrder();
     $dl = $s->search();
     if ($s->searchError()) {
         $action->exitError($s->getError());
@@ -19,18 +22,16 @@ function mobileviewer_main(Action & $action)
     $dl = $s->getDocumentList();
     
     $list = array();
-    */
     /**
      * @var Doc $doc
      */
-    /*
     foreach ($dl as $id => $doc) {
         $list[] = array(
             "docid" => $doc->id,
-            "docicon" => $doc->getIcon("", 30) ,
-            "doctitle" => $doc->getTitle()
+            "docicon" => $doc->getIcon("", 16) ,
+            "doctitle" => $doc->getTitle(),
+            "doctext" => str_replace('[', '&#1B;', nl2br($s->getHighLightText($doc, '<strong>', '</strong>', $action->GetParam("FULLTEXT_HIGHTLIGHTSIZE", 200))))
         );
     }
     $action->lay->setBlockData("DOCLIST", $list);
-    */
 }

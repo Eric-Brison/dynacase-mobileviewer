@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quelques experts</title>
+    <title>Document's viewer</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -19,12 +19,14 @@
             padding-right: 10px;
             text-align: right;
         }
+
         img.mime {
-            width:16px;
+            width: 16px;
         }
+
         span.ui-familyTitle {
             font-size: 70%;
-            font-style:italic;
+            font-style: italic;
         }
     </style>
     <script>
@@ -37,45 +39,88 @@
                  $('#documentView').append(data).trigger('create');
                  },'html');
                  */
-              viewDocument(docid);
+                viewDocument(docid);
 
             });
-             $("body").on("click", "a.relation", function (event) {
+            $("body").on("click", "a.relation", function (event) {
                 var docid = $(this).attr('data-docid');
                 console.log($(this).text() + docid);
 
-              viewDocument(docid);
+                viewDocument(docid);
 
             });
+
+            $("#searchInput").on("keydown", function (event) {
+                var text = $(this).val();
+                if (event.keyCode == 13) {
+                    console.log('you pressed enter ^_^');
+                console.log("input", text);
+                    $("#documentList").html('Searching data...');
+                    $.mobile.loading( 'show' );
+
+                $.ajax({
+                                    url:'?app=MOBILEVIEWER&action=DOCLIST&keyword=' + text,
+                                    success:function (data) {
+                                        console.log('Load list was performed.', data);
+
+                                        //$("#documentView").append(data).trigger("create");
+                                        // $("#documentView").html(data).trigger("create");
+                                        //$("#documentViewPage div").remove();
+                                        // $("#documentViewPage").html('').append(data).trigger("create");
+                                        // $('#documentViewPage').attr("id","");
+                                        $("#documentList").html('').append(data).trigger("create");
+                                        $("#documentList").listview("refresh");
+
+                                        $.mobile.loading( 'hide' );
+                                       // $.mobile.changePage('#' + divId);
+                                        //$("#documentView").html("coucuo");
+                                    },
+                                    error:function (data) {
+                                        console.log('ERROR.', data);
+                                        var r = data.responseText;
+
+                                        $("#dialogError").popup("open").html(r);
+
+                                        $.mobile.loading( 'hide' );
+                                    }
+                                });
+                }
+
+            });
+
         });
 
         function viewDocument(docid) {
-            var divId='documentViewPage-'+docid;
-                          if (document.getElementById(divId)) {
-                              $.mobile.changePage('#'+divId);
-                          } else {
-                          $.ajax({
-                              url:'?app=MOBILEVIEWER&action=DOCVIEW&id=' + docid,
-                              success:function (data) {
-                                  //console.log('Load was performed.', data);
+            var divId = 'documentViewPage-' + docid;
+            if (document.getElementById(divId)) {
+                $.mobile.changePage('#' + divId);
+            } else {
+                $.mobile.loading( 'show' );
+                $.ajax({
+                    url:'?app=MOBILEVIEWER&action=DOCVIEW&id=' + docid,
+                    success:function (data) {
+                        //console.log('Load was performed.', data);
 
-                                  //$("#documentView").append(data).trigger("create");
-                                  // $("#documentView").html(data).trigger("create");
-                                  //$("#documentViewPage div").remove();
-                                 // $("#documentViewPage").html('').append(data).trigger("create");
-                                 // $('#documentViewPage').attr("id","");
-                                  $("body").append(data).trigger("create");
-                                  $.mobile.changePage('#'+divId);
-                                  //$("#documentView").html("coucuo");
-                              },
-                              error:function (data) {
-                                  console.log('ERROR.', data);
-                                  var r = data.responseText;
+                        //$("#documentView").append(data).trigger("create");
+                        // $("#documentView").html(data).trigger("create");
+                        //$("#documentViewPage div").remove();
+                        // $("#documentViewPage").html('').append(data).trigger("create");
+                        // $('#documentViewPage').attr("id","");
 
-                                  $("#dialogError").popup("open").html(r);
-                              }
-                          });
-                          }
+                        $("body").append(data).trigger("create");
+                        $.mobile.changePage('#' + divId);
+                        $.mobile.loading( 'hide' );
+                        //$("#documentView").html("coucuo");
+                    },
+                    error:function (data) {
+                        console.log('ERROR.', data);
+                        var r = data.responseText;
+
+                        $("#dialogError").popup("open").html(r);
+                        $.mobile.loading( 'hide' );
+                    }
+                });
+            }
         }
     </script>
 </head>
@@ -84,17 +129,14 @@
 <div id="mainPage" data-role="page" data-theme="a">
 
     <div data-role="header">
-        <h1>Quelques experts</h1>
+        <h1>Document list</h1>
     </div>
 
 
     <div data-role="content">
-        <ul id="documentList" data-role="listview" data-filter="true" data-inset="true">
-            [BLOCK DOCLIST]
-            <li>
-                <a data-docid="[docid]"><img class="ui-li-icon" src="[docicon]"/>[doctitle]</a>
-            </li>
-            [ENDBLOCK DOCLIST]
+        <input type="search" name="search" id="searchInput" value="" placeholder="Type a word"/>
+        <ul id="documentList" data-role="listview" data-filter="false" data-inset="true">
+
         </ul>
 
     </div>
@@ -114,6 +156,6 @@
 </div>
 <div id="documentViewPage" data-role="page" data-theme="a">
     <!-- documentView -->
-   </div>
+</div>
 </body>
 </html>
