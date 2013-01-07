@@ -1,7 +1,7 @@
 
             [BLOCK DOCLIST]
             <li>
-                <a data-docid="[docid]"><img class="ui-li-icon" src="[docicon]"/><h3>[doctitle]</h3>
+                <a data-docid="[docid]"><img class2="ui-li-icon" src="[docicon]"/><h3>[doctitle]</h3>
                 <p>[doctext]</p>
                 </a>
             </li>

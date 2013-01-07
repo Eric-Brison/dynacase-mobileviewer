@@ -14,7 +14,8 @@ function doclist(Action & $action)
     $s->setObjectReturn(true);
     $s->addFilter("doctype !~ 'S'");
     $s->addGeneralFilter($action->getArgument("keyword"));
-    $s->setPertinenceOrder();
+   // $s->setPertinenceOrder();
+    $s->setOrder("adate desc");
     $dl = $s->search();
     if ($s->searchError()) {
         $action->exitError($s->getError());
@@ -28,7 +29,7 @@ function doclist(Action & $action)
     foreach ($dl as $id => $doc) {
         $list[] = array(
             "docid" => $doc->id,
-            "docicon" => $doc->getIcon("", 16) ,
+            "docicon" => $doc->getIcon("", 40) ,
             "doctitle" => $doc->getTitle(),
             "doctext" => str_replace('[', '&#1B;', nl2br($s->getHighLightText($doc, '<strong>', '</strong>', $action->GetParam("FULLTEXT_HIGHTLIGHTSIZE", 200))))
         );

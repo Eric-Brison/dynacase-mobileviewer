@@ -56,7 +56,8 @@
                     console.log('you pressed enter ^_^');
                 console.log("input", text);
                     $("#documentList").html('Searching data...');
-                    $.mobile.loading( 'show' );
+
+                $.mobile.loading( 'show' , {textVisible:true, text:"Searching for "+text});
 
                 $.ajax({
                                     url:'?app=MOBILEVIEWER&action=DOCLIST&keyword=' + text,
@@ -95,7 +96,7 @@
             if (document.getElementById(divId)) {
                 $.mobile.changePage('#' + divId);
             } else {
-                $.mobile.loading( 'show' );
+                $.mobile.loading( 'show' , {textVisible:true,text:"Loading document"});
                 $.ajax({
                     url:'?app=MOBILEVIEWER&action=DOCVIEW&id=' + docid,
                     success:function (data) {

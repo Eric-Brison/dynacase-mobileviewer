@@ -25,11 +25,13 @@ function docview(Action & $action)
     $action->lay->set("familyTitle",$fdoc->getHTMLTitle());
     $out = array();
     $frames = array();
+
+    // TODO APPLY MASK
     foreach ($values as $aid => $value) {
         if ($value !== '') {
             $oa = $d->getAttribute(($aid));
             if ($oa) {
-                //if ($oa->mvisibility=='H' || $oa->mvisibility=='I') continue;
+                if ($oa->mvisibility=='H' || $oa->mvisibility=='I') continue;
                 if (($oa->type == "docid" || $oa->type == "account") ) {
                     if ($oa->isMultiple()) {
                         $tv=$d->getTValue($aid);
