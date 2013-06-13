@@ -16,7 +16,8 @@ function docview(Action & $action)
     
     $d = new_doc($action->dbaccess, $docid, true);
     if (!$d->isAlive()) $action->exitError(sprintf("document id %s not found", $docid));
-    
+    $err=$d->control("view");
+    if ($err) $action->exitError($err);
     $action->lay->set("docTitle", $d->getHTMLTitle());
     $action->lay->set("docIcon", $d->getIcon('', 40));
     
