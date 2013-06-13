@@ -46,7 +46,11 @@ function docview(Action & $action)
                     $displayValue = sprintf('<a class="relation" data-role="button" data-inline="true" data-docid="%d"> <img src="%s"/> %s</a>', $value, $d->getIcon($iconValue, 16) , $d->getHTMLTitle($value));
                     }
                 } else {
+                    if ($oa->type=="image") {
+                         $displayValue = sprintf('<img src="%s&width=256" />',($d->getHtmlValue($oa, $value)));
+                    } else {
                     $displayValue = $d->getHtmlValue($oa, $value);
+                    }
                 }
                 $setId = $oa->fieldSet->id;
                 $out[$setId][] = array(
