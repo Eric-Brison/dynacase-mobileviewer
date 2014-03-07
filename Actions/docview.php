@@ -3,7 +3,7 @@
  * @author Anakeen
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License
  * @package FDL
- */
+*/
 
 include_once ("FDL/Class.Doc.php");
 function docview(Action & $action)
@@ -11,45 +11,47 @@ function docview(Action & $action)
     
     $usage = new ActionUsage($action);
     $usage->setText("document html view");
-    $docid = $usage->addNeeded("id", "document id");
+    $docid = $usage->addRequiredParameter("id", "document id");
     $usage->verify();
     
     $d = new_doc($action->dbaccess, $docid, true);
     if (!$d->isAlive()) $action->exitError(sprintf("document id %s not found", $docid));
-    $err=$d->control("view");
+    $err = $d->control("view");
     if ($err) $action->exitError($err);
     $action->lay->set("docTitle", $d->getHTMLTitle());
     $action->lay->set("docIcon", $d->getIcon('', 40));
     
     $values = $d->getvalues();
-    $fdoc=$d->getFamDoc();
-    $action->lay->set("familyTitle",$fdoc->getHTMLTitle());
+    $fdoc = $d->getFamilyDocument();
+    $action->lay->set("familyTitle", $fdoc->getHTMLTitle());
     $out = array();
     $frames = array();
-
     // TODO APPLY MASK
     foreach ($values as $aid => $value) {
         if ($value !== '') {
             $oa = $d->getAttribute(($aid));
             if ($oa) {
-                if ($oa->mvisibility=='H' || $oa->mvisibility=='I') continue;
-                if (($oa->type == "docid" || $oa->type == "account") ) {
+                if ($oa->mvisibility == 'H' || $oa->mvisibility == 'I') continue;
+                if (($oa->type == "docid" || $oa->type == "account")) {
                     if ($oa->isMultiple()) {
-                        $tv=$d->getTValue($aid);
-                        $displayValue='';
+                        $tv = $d->getMultipleRawValues($aid);
+                        $displayValue = '';
                         foreach ($tv as $v) {
                             simpleQuery($action->dbaccess, sprintf('select icon from docread where id=%d', $v) , $iconValue, true, true);
-                                                $displayValue .= sprintf('<a class="relation" data-role="button" data-inline="true" data-docid="%d"> <img src="%s"/> %s</a>', $v, $d->getIcon($iconValue, 16) , $d->getHTMLTitle($v));
+                            $displayValue.= sprintf('<a class="relation" data-role="button" data-inline="true" data-docid="%d"> <img src="%s"/> %s</a>', $v, $d->getIcon($iconValue, 16) , $d->getHTMLTitle($v));
                         }
                     } else {
-                    simpleQuery($action->dbaccess, sprintf('select icon from docread where id=%d', $value) , $iconValue, true, true);
-                    $displayValue = sprintf('<a class="relation" data-role="button" data-inline="true" data-docid="%d"> <img src="%s"/> %s</a>', $value, $d->getIcon($iconValue, 16) , $d->getHTMLTitle($value));
+                        simpleQuery($action->dbaccess, sprintf('select icon from docread where id=%d', $value) , $iconValue, true, true);
+                        $displayValue = sprintf('<a class="relation" data-role="button" data-inline="true" data-docid="%d"> <img src="%s"/> %s</a>', $value, $d->getIcon($iconValue, 16) , $d->getHTMLTitle($value));
                     }
                 } else {
-                    if ($oa->type=="image") {
-                         $displayValue = sprintf('<img src="%s&width=256" />',($d->getHtmlValue($oa, $value)));
+                    if ($oa->type == "image") {
+                        $displayValue = sprintf('<img src="%s&width=256" />', ($d->getHtmlValue($oa, $value)));
+                    } elseif ($oa->type == "file") {
+                        $href = $d->getFileLink($oa->id, -1, $cache = false, $inline = false);
+                        $displayValue = sprintf('<a data-role="button" target="_blank" href="%s">%s</a>', $href, ($d->getTextualAttrValue($oa->id, $value)));
                     } else {
-                    $displayValue = $d->getHtmlValue($oa, $value);
+                        $displayValue = $d->getHtmlValue($oa, $value);
                     }
                 }
                 $setId = $oa->fieldSet->id;
